@@ -1,3 +1,5 @@
+import java.util.concurrent.Semaphore;
+
 public class Philosopher extends Thread {
 	private GraphicTable table;
 	private Chopstick left;
@@ -6,6 +8,7 @@ public class Philosopher extends Thread {
 	final int timeThink_max = 5000;
 	final int timeNextFork = 100;
 	final int timeEat_max = 5000;
+	// final static Semaphore semaphore = new Semaphore(0, true);
 	
 	Philosopher(int ID, GraphicTable table, Chopstick left, Chopstick right) {
 		this.ID = ID;
@@ -32,12 +35,14 @@ public class Philosopher extends Thread {
 			
 			// Done with thinking
 			System.out.println(getName()+" finished thinking"); 
+
 			 
 			// and now I am hungry!
 			System.out.println(getName()+" is hungry"); 
 			// Tell the GUI I am hungry...
 			table.isHungry(ID);
 			
+
 			// Let's try to get the left chopstick
 			System.out.println(getName()+" wants left chopstick");
 			left.take();
@@ -45,7 +50,8 @@ public class Philosopher extends Thread {
 			// Tell the GUI that I took the left chopstick
 			table.takeChopstick(ID, left.getID());
 			System.out.println(getName()+" got left chopstick");
-			
+
+
 			// I'll wait a bit before I try to get the next chopstick (it's philosopher's etiquette)
 			try {
 				sleep(timeNextFork);
@@ -83,8 +89,7 @@ public class Philosopher extends Thread {
 			// I'll release the right chopstick
 			table.releaseChopstick(ID, right.getID());
 			right.release();
-			System.out.println(getName()+" released right chopstick");
-		
+			System.out.println(getName()+" released right chopstick");		
 		}
 	}
 }
