@@ -9,7 +9,7 @@ public class Philosopher extends Thread {
 	final int timeNextFork = 100;
 	final int timeEat_max = 5000;
 
-	private Semaphore semFour = new Semaphore(4);
+	static Semaphore semFour = new Semaphore(4);
 	
 	Philosopher(int ID, GraphicTable table, Chopstick left, Chopstick right) {
 		this.ID = ID;
@@ -44,6 +44,7 @@ public class Philosopher extends Thread {
 			
 			try {
 				semFour.acquire();
+				System.out.println(semFour.availablePermits());
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
