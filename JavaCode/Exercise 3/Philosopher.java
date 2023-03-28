@@ -4,107 +4,106 @@ public class Philosopher extends Thread {
 	private Chopstick right;
 	private int ID;
 	final int timeThink_max = 5000;
-	final int timeNextFork = 100;
+	final int timeNextFork = 7000;
 	final int timeEat_max = 5000;
-	
+
+	private long initialTime;
+
 	Philosopher(int ID, GraphicTable table, Chopstick left, Chopstick right) {
 		this.ID = ID;
 		this.table = table;
 		this.left = left;
 		this.right = right;
-		setName("Philosopher "+ID);
+		this.initialTime = 0;
+		setName("Philosopher " + ID);
 	}
-	
+
 	public void run() {
-		while(true){
-			
+		while (true) {
+
 			// Tell the table GUI that I am thinking
 			table.isThinking(ID);
 			// Print to console that I am thinking
-			System.out.println(getName()+" thinks");
-			
+			System.out.println(getName() + " thinks");
+
 			// Let the thread sleep (in order to simulate thinking time)
 			try {
-				sleep((long)(Math.random()*timeThink_max));
-			} catch(InterruptedException e) {
+				sleep((long) (Math.random() * timeThink_max));
+			} catch (InterruptedException e) {
 				System.out.println(e);
 			}
-			
+
 			// Done with thinking
-			System.out.println(getName()+" finished thinking"); 
-			 
+			System.out.println(getName() + " finished thinking");
+
 			// and now I am hungry!
-			System.out.println(getName()+" is hungry"); 
+			System.out.println(getName() + " is hungry");
 			// Tell the GUI I am hungry...
 			table.isHungry(ID);
-			
+
 			// Let's try to get the left chopstick
-			System.out.println(getName()+" wants left chopstick");
-			try {
-				left.take();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			// Tell the GUI that I took the left chopstick
-			table.takeChopstick(ID, left.getID());
-			System.out.println(getName()+" got left chopstick");
-			
-			// I'll wait a bit before I try to get the next chopstick (it's philosopher's etiquette)
-			try {
-				sleep(timeNextFork);
-			} catch(InterruptedException e) {
-				System.out.println(e);
-			} 
-			
-			// Ok, enough etiquette nonesense, now I need my right chopstick
-			System.out.println(getName()+" wants right chopstick");
-			try {
+			System.out.println(getName() + " wants left chopstick");
+
+			initialTime = System.currentTimeMillis();
+			left.take();
+
+			// Gives up if it took too long
+			if (System.currentTimeMillis() - initialTime > 1000) {
+				System.out.println(getName() + " is giving up");
+			} else {
+
+				// Tell the GUI that I took the left chopstick
+				table.takeChopstick(ID, left.getID());
+				System.out.println(getName() + " got left chopstick");
+
+				// I'll wait a bit before I try to get the next chopstick (it's philosopher's
+				// etiquette)
+				try {
+					sleep(timeNextFork);
+				} catch (InterruptedException e) {
+					System.out.println(e);
+				}
+
+				// Ok, enough etiquette nonesense, now I need my right chopstick
+				System.out.println(getName() + " wants right chopstick");
+
+				initialTime = System.currentTimeMillis();
 				right.take();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				if (System.currentTimeMillis() - initialTime > 1000) {
+					System.out.println(getName() + " is giving up");
+					table.releaseChopstick(ID, left.getID());
+					left.release();
+				} else {
 
-			// Got it!
-			table.takeChopstick(ID, right.getID());
-			System.out.println(getName()+" got right chopstick");
-			
-			// Sweet taste of steamed rice....
-			System.out.println(getName()+" eats"); 
-			try {
-				sleep((long)(Math.random()*timeEat_max));
-			} catch(InterruptedException e) {
-				System.out.println(e);
-			}
-			
-			// Ok, I am really full now
-			System.out.println(getName()+" finished eating"); 
-			
-			// I just realized I did not wash these chopsticks 
-			// and the philosopher on my right is coming down with a flu 
-			
-			// I'll release the left chopstick
-			table.releaseChopstick(ID, left.getID());
-			try {
-				left.release();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println(getName()+" released left chopstick");
+					// Got it!
+					table.takeChopstick(ID, right.getID());
+					System.out.println(getName() + " got right chopstick");
 
-			// I'll release the right chopstick
-			table.releaseChopstick(ID, right.getID());
-			try {
-				right.release();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					// Sweet taste of steamed rice....
+					System.out.println(getName() + " eats");
+					try {
+						sleep((long) (Math.random() * timeEat_max));
+					} catch (InterruptedException e) {
+						System.out.println(e);
+					}
+
+					// Ok, I am really full now
+					System.out.println(getName() + " finished eating");
+
+					// I just realized I did not wash these chopsticks
+					// and the philosopher on my right is coming down with a flu
+
+					// I'll release the left chopstick
+					table.releaseChopstick(ID, left.getID());
+					left.release();
+					System.out.println(getName() + " released left chopstick");
+
+					// I'll release the right chopstick
+					table.releaseChopstick(ID, right.getID());
+					right.release();
+					System.out.println(getName() + " released right chopstick");
+				}
 			}
-			System.out.println(getName()+" released right chopstick");
-		
 		}
 	}
 }
