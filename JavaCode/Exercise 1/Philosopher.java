@@ -58,6 +58,7 @@ public class Philosopher extends Thread {
 				System.out.println(e);
 			} 
 			
+
 			// Ok, enough etiquette nonesense, now I need my right chopstick
 			System.out.println(getName()+" wants right chopstick");
 			try {
