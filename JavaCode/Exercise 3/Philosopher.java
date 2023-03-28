@@ -4,7 +4,7 @@ public class Philosopher extends Thread {
 	private Chopstick right;
 	private int ID;
 	final int timeThink_max = 5000;
-	final int timeNextFork = 7000;
+	final int timeNextFork = 100;
 	final int timeEat_max = 5000;
 
 	private long initialTime;
