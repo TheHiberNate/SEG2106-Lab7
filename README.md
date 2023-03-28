@@ -1,1 +1,2 @@
-# SEG-2106-Lab-7
+# SEG2106-Lab7
+Nathan Gawargy & James Couture
