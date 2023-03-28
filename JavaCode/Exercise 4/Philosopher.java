@@ -1,17 +1,23 @@
 public class Philosopher extends Thread {
 	private GraphicTable table;
-	private Chopstick left;
-	private Chopstick right;
+	private Chopstick first;
+	private Chopstick second;
 	private int ID;
 	final int timeThink_max = 5000;
-	final int timeNextFork = 100;
+	final int timeNextFork = 7000;
 	final int timeEat_max = 5000;
 	
 	Philosopher(int ID, GraphicTable table, Chopstick left, Chopstick right) {
 		this.ID = ID;
 		this.table = table;
-		this.left = left;
-		this.right = right;
+
+		if (ID%2 == 1){
+			this.first = left;
+			this.second = right;
+		}else{
+			this.first = right;
+			this.second = left;
+		}
 		setName("Philosopher "+ID);
 	}
 	
@@ -39,18 +45,27 @@ public class Philosopher extends Thread {
 			table.isHungry(ID);
 			
 			// Let's try to get the left chopstick
-			System.out.println(getName()+" wants left chopstick");
+			if (ID%2 == 1){
+				System.out.println(getName()+" wants left chopstick");
+			}else{
+				System.out.println(getName()+" wants right chopstick");
+			}
 			try {
-				left.take();
+				first.take();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			// Tell the GUI that I took the left chopstick
-			table.takeChopstick(ID, left.getID());
-			System.out.println(getName()+" got left chopstick");
-			
+			table.takeChopstick(ID, first.getID());
+
+			if (ID%2 == 1){
+				System.out.println(getName()+" got left chopstick");
+			}else{
+				System.out.println(getName()+" got right chopstick");
+			}
+
 			// I'll wait a bit before I try to get the next chopstick (it's philosopher's etiquette)
 			try {
 				sleep(timeNextFork);
@@ -60,17 +75,26 @@ public class Philosopher extends Thread {
 			
 
 			// Ok, enough etiquette nonesense, now I need my right chopstick
-			System.out.println(getName()+" wants right chopstick");
+			if (ID%2 == 1){
+				System.out.println(getName()+" wants right chopstick");
+			}else{
+				System.out.println(getName()+" wants left chopstick");
+			}
+
 			try {
-				right.take();
+				this.second.take();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			// Got it!
-			table.takeChopstick(ID, right.getID());
-			System.out.println(getName()+" got right chopstick");
+			table.takeChopstick(ID, second.getID());
+			if (ID%2 == 1){
+				System.out.println(getName()+" got right chopstick");
+			}else{
+				System.out.println(getName()+" got left chopstick");
+			}
 			
 			// Sweet taste of steamed rice....
 			System.out.println(getName()+" eats"); 
@@ -87,24 +111,32 @@ public class Philosopher extends Thread {
 			// and the philosopher on my right is coming down with a flu 
 			
 			// I'll release the left chopstick
-			table.releaseChopstick(ID, left.getID());
+			table.releaseChopstick(ID, first.getID());
 			try {
-				left.release();
+				this.first.release();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println(getName()+" released left chopstick");
+			if (ID%2 == 1){
+				System.out.println(getName()+" released left chopstick");
+			}else{
+				System.out.println(getName()+" released right chopstick");
+			}
 
 			// I'll release the right chopstick
-			table.releaseChopstick(ID, right.getID());
+			table.releaseChopstick(ID, second.getID());
 			try {
-				right.release();
+				second.release();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println(getName()+" released right chopstick");
+			if (ID%2 == 1){
+				System.out.println(getName()+" released right chopstick");
+			}else{
+				System.out.println(getName()+" released left chopstick");
+			}
 		
 		}
 	}
