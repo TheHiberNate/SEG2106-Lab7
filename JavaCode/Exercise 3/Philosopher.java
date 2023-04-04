@@ -49,7 +49,7 @@ public class Philosopher extends Thread {
 
 			// Gives up if it took too long
 			if (System.currentTimeMillis() - initialTime > 1000) {
-				System.out.println(getName() + " is giving up");
+				System.out.println(getName() + " is giving up trying to take chopstick");
 			} else {
 
 				// Tell the GUI that I took the left chopstick
