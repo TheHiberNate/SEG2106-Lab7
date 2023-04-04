@@ -4,7 +4,7 @@ public class Philosopher extends Thread {
 	private Chopstick second;
 	private int ID;
 	final int timeThink_max = 5000;
-	final int timeNextFork = 7000;
+	final int timeNextFork = 100;
 	final int timeEat_max = 5000;
 	
 	Philosopher(int ID, GraphicTable table, Chopstick left, Chopstick right) {
@@ -50,12 +50,7 @@ public class Philosopher extends Thread {
 			}else{
 				System.out.println(getName()+" wants right chopstick");
 			}
-			try {
-				first.take();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			first.take();
 			
 			// Tell the GUI that I took the left chopstick
 			table.takeChopstick(ID, first.getID());
@@ -80,13 +75,9 @@ public class Philosopher extends Thread {
 			}else{
 				System.out.println(getName()+" wants left chopstick");
 			}
+			
+			this.second.take();
 
-			try {
-				this.second.take();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 			// Got it!
 			table.takeChopstick(ID, second.getID());
@@ -111,33 +102,29 @@ public class Philosopher extends Thread {
 			// and the philosopher on my right is coming down with a flu 
 			
 			// I'll release the left chopstick
-			table.releaseChopstick(ID, first.getID());
-			try {
-				this.first.release();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+
 			if (ID%2 == 1){
-				System.out.println(getName()+" released left chopstick");
+				table.releaseChopstick(ID, first.getID());
+				this.first.release();
 			}else{
-				System.out.println(getName()+" released right chopstick");
+				table.releaseChopstick(ID, second.getID());
+				this.second.release();			
 			}
+			System.out.println(getName()+" released left chopstick");
 
 			// I'll release the right chopstick
 			table.releaseChopstick(ID, second.getID());
-			try {
-				second.release();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			second.release();
+
 			if (ID%2 == 1){
-				System.out.println(getName()+" released right chopstick");
-			}else{
-				System.out.println(getName()+" released left chopstick");
+				table.releaseChopstick(ID, second.getID());
+				second.release();
+			} else{
+				table.releaseChopstick(ID, first.getID());
+				this.first.release();
 			}
-		
+			System.out.println(getName()+" released right chopstick");
 		}
 	}
 }
