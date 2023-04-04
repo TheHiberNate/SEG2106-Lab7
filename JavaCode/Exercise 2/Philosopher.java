@@ -44,7 +44,7 @@ public class Philosopher extends Thread {
 			
 			try {
 				semFour.acquire();
-				System.out.println(semFour.availablePermits());
+				// System.out.println(semFour.availablePermits());
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -52,13 +52,8 @@ public class Philosopher extends Thread {
 
 			// Let's try to get the left chopstick
 			System.out.println(getName()+" wants left chopstick");
-			try {
-				left.take();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			left.take();
+
 			// Tell the GUI that I took the left chopstick
 			table.takeChopstick(ID, left.getID());
 			System.out.println(getName()+" got left chopstick");
@@ -72,12 +67,7 @@ public class Philosopher extends Thread {
 			
 			// Ok, enough etiquette nonesense, now I need my right chopstick
 			System.out.println(getName()+" wants right chopstick");
-			try {
-				right.take();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			right.take();
 
 			// Got it!
 			table.takeChopstick(ID, right.getID());
@@ -99,22 +89,13 @@ public class Philosopher extends Thread {
 			
 			// I'll release the left chopstick
 			table.releaseChopstick(ID, left.getID());
-			try {
-				left.release();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			left.release();
+
 			System.out.println(getName()+" released left chopstick");
 
 			// I'll release the right chopstick
 			table.releaseChopstick(ID, right.getID());
-			try {
-				right.release();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			right.release();
 
 			semFour.release();
 
