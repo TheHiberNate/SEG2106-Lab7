@@ -41,6 +41,7 @@ public class Philosopher extends Thread {
 			// Let's try to get the left chopstick
 			System.out.println(getName()+" wants left chopstick");
 			left.take();
+
 			
 			// Tell the GUI that I took the left chopstick
 			table.takeChopstick(ID, left.getID());
@@ -53,6 +54,7 @@ public class Philosopher extends Thread {
 				System.out.println(e);
 			} 
 			
+
 			// Ok, enough etiquette nonesense, now I need my right chopstick
 			System.out.println(getName()+" wants right chopstick");
 			right.take();
