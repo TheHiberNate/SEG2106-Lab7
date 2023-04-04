@@ -9,19 +9,22 @@ public class Chopstick {
 		free = true;
 	}
 	
-	synchronized void take() throws InterruptedException {
+	synchronized void take() {
 		if (free){
 			free = false;
 		}else{
-			wait();
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	synchronized void release() throws InterruptedException {
-		if (!free){
-			notify();
-			free = true;
-		}
+	synchronized void release()  {
+		free = true;
+		notify();
 	}
 	    
 	public int getID() {
